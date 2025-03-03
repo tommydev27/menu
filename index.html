@@ -1,0 +1,244 @@
+
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        
+  </head>
+
+  <body>
+    <div id="drag-container">
+      <div id="spin-container">
+
+        <img
+          src="https://iili.io/dw83Xm7.md.jpg"
+          alt=""
+        />
+        <img
+          src="https://iili.io/dw8KMD7.md.jpg"
+          alt=""
+        />
+        <img
+          src="https://iili.io/dw8qsup.md.jpg"
+          alt=""
+        />
+        <img
+          src="https://iili.io/dw8xKej.md.jpg"
+          alt=""
+        />
+        <img
+          src="https://iili.io/dw8zSMN.md.jpg"
+          alt=""
+        />
+
+
+
+        <p>
+        <i class="fab fa-ubuntu" > </i></p>
+      </div>
+
+      <div id="ground"></div>
+    </div>
+
+    <div id="music-container"></div>
+   <style>
+    
+      body {
+        touch-action: none;
+        display: flex;
+        background-image: url('https://iili.io/2KkvXkP.md.jpg');
+        background-size: cover;
+        align-items: center;
+        background-position: center;
+      }
+
+      #drag-container,
+      #spin-container {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        margin: auto;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-transform: rotateX(-10deg);
+        transform: rotateX(-10deg);
+      }
+
+      #drag-container img,
+      #drag-container video {
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        position: absolute;
+        left: 0;
+        top: 0;
+          align-items: center;
+        width: 100px;
+        height: 180px;
+        line-height: 100px;
+        text-align: center;
+        -webkit-box-shadow: 0 0 0px #fff;
+        box-shadow: 0 0 0px #fff;
+        -webkit-box-reflect: below 10px
+          linear-gradient(transparent, transparent, #0005);
+      }
+
+      img {
+          border-radius: 8px;
+      }
+
+      #drag-container img:hover,
+      #drag-container video:hover {
+        -webkit-box-shadow: 0 0 0 px #fffd;
+        box-shadow: 0 0 0 px #0056b3;
+        -webkit-box-reflect: below 12px
+          linear-gradient(transparent, transparent, #0007);
+      }
+
+      #drag-container p {
+        font-family: Serif;
+        position: absolute;
+        top: 70%;
+        left: 50%;
+        font-size: 50px;
+        -webkit-transform: translate(-50%, -50%) rotateX(90deg);
+        transform: translate(-50%, -50%) rotateX(90deg);
+        color: #fff;
+        border: 2px solid #df0330f9;
+        border-radius: 50px;
+      }
+
+
+      #ground {
+        position: absolute;
+        align-items: center;
+      }
+
+      @-webkit-keyframes spinRevert {
+        from {
+          -webkit-transform: rotateY(360deg);
+          transform: rotateY(360deg);
+        }
+        to {
+          -webkit-transform: rotateY(0deg);
+          transform: rotateY(0deg);
+        }
+      }
+
+    </style>
+    <script>
+
+      var radius = 130; // how big of the radius
+      var autoRotate = true; // auto rotate or not
+      var rotateSpeed = -30; // unit: seconds/360 degrees
+      var imgWidth = 50; // width of images (unit: px)
+      var imgHeight = 0;
+      
+var bgMusicURL = "https://www.youtube.com/embed/YOUTUBE_VIDEO_ID?autoplay=1&loop=1";
+var bgMusicControls = false;
+
+      setTimeout(init, 100);
+
+      var odrag = document.getElementById("drag-container");
+      var ospin = document.getElementById("spin-container");
+      var aImg = ospin.getElementsByTagName("img");
+      var aVid = ospin.getElementsByTagName("video");
+      var aEle = [...aImg, ...aVid]; // combine 2 arrays
+
+      // Size of images
+      ospin.style.width = imgWidth + 50 + "px";
+      ospin.style.height = imgHeight + 200 + "px";
+
+
+
+      function init(delayTime) {
+        for (var i = 0; i < aEle.length; i++) {
+          aEle[i].style.transform =
+            "rotateY(" +
+            i * (360 / aEle.length) +
+            "deg) translateZ(" +
+            radius +
+            "px)";
+          aEle[i].style.transition = "transform 1s";
+          aEle[i].style.transitionDelay =
+            delayTime || (aEle.length - i) / 5 + "s";
+        }
+      }
+
+      function applyTranform(obj) {
+        // Constrain the angle of camera (between 0 and 180)
+        if (tY > 180) tY = 180;
+        if (tY < 0) tY = 0;
+
+        // Apply the angle
+        obj.style.transform = "rotateX(" + -tY + "deg) rotateY(" + tX + "deg)";
+      }
+
+      function playSpin(yes) {
+        ospin.style.animationPlayState = yes ? "running" : "paused";
+      }
+
+      var sX,
+        sY,
+        nX,
+        nY,
+        desX = 0,
+        desY = 0,
+        tX = 0,
+        tY = 10;
+
+      // auto spin
+      if (autoRotate) {
+        var animationName = rotateSpeed > 0 ? "spin" : "spinRevert";
+        ospin.style.animation = `${animationName} ${Math.abs(
+          rotateSpeed
+        )}s infinite linear`;
+      }
+
+
+      document.onpointerdown = function(e) {
+        clearInterval(odrag.timer);
+        e = e || window.event;
+        var sX = e.clientX,
+          sY = e.clientY;
+
+        this.onpointermove = function(e) {
+          e = e || window.event;
+          var nX = e.clientX,
+            nY = e.clientY;
+          desX = nX - sX;
+          desY = nY - sY;
+          tX += desX * 0.1;
+          tY += desY * 0.1;
+          applyTranform(odrag);
+          sX = nX;
+          sY = nY;
+        };
+
+        this.onpointerup = function(e) {
+          odrag.timer = setInterval(function() {
+            desX *= 0.95;
+            desY *= 0.95;
+            tX += desX * 0.1;
+            tY += desY * 0.1;
+            applyTranform(odrag);
+            playSpin(false);
+            if (Math.abs(desX) < 0.5 && Math.abs(desY) < 0.5) {
+              clearInterval(odrag.timer);
+              playSpin(true);
+            }
+          }, 17);
+          this.onpointermove = this.onpointerup = null;
+        };
+
+        return false;
+      };
+
+      document.onmousewheel = function(e) {
+        e = e || window.event;
+        var d = e.wheelDelta / 50 || -e.detail;
+        radius += d;
+        init(1);
+      };
+    </script>
+
+  </body>
+</html>
