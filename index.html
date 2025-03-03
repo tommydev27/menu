@@ -17,8 +17,7 @@
     </div>
     <div id="music-container"></div>
    <style>
-    body {
-        touch-action: none;
+    body {;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -41,6 +40,7 @@
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
+        touch-action: none;
         margin: auto;
         -webkit-transform-style: preserve-3d;
         transform-style: preserve-3d;
@@ -85,42 +85,7 @@
           box-shadow: 0 0 5px #4f52fe; 
       }
     </style>
-<script>
-var radius = 150;
-var autoRotate = true;
-var rotateSpeed = -30;
-var imgWidth = 50;
-var imgHeight = 200;
-var bgMusicURL = "https://www.youtube.com/embed/YOUTUBE_VIDEO_ID?autoplay=1&loop=1";
-var bgMusicControls = false;
+    <script>
 
-setTimeout(init, 100);
-
-var odrag = document.getElementById("drag-container");
-var ospin = document.getElementById("spin-container");
-var aImg = ospin.getElementsByTagName("img");
-var aVid = ospin.getElementsByTagName("video");
-var aEle = [...aImg, ...aVid];
-
-ospin.style.width = imgWidth + 46 + "px";
-ospin.style.height = imgHeight + "px";
-
-function init(delayTime) {
-    for (var i = 0; i < aEle.length; i++) {
-        aEle[i].style.transform = "rotateY(" + i * (360 / aEle.length) + "deg) translateZ(" + radius + "px)";
-        aEle[i].style.transition = "transform 1s";
-        aEle[i].style.transitionDelay = delayTime || (aEle.length - i) / 5 + "s";
-    }
-}
-
-if (autoRotate) {
-    var animationName = rotateSpeed > 0 ? "spin" : "spinRevert";
-    ospin.style.animation = `${animationName} ${Math.abs(rotateSpeed)}s infinite linear`;
-}
-
-// Menonaktifkan interaksi sentuhan jari dan scroll
-document.onpointerdown = null;
-document.onpointermove = null;
-document.onpointerup = null;
-document.onwheel = null;
-</script>
+var radius=150;var autoRotate=true;var rotateSpeed=-30;var imgWidth=50;var imgHeight=250;
+var bgMusicURL="https://www.youtube.com/embed/YOUTUBE_VIDEO_ID?autoplay=1&loop=1";var bgMusicControls=false;setTimeout(init,100);var odrag=document.getElementById("drag-container");var ospin=document.getElementById("spin-container");var aImg=ospin.getElementsByTagName("img");var aVid=ospin.getElementsByTagName("video");var aEle=[...aImg,...aVid];ospin.style.width=imgWidth+46+"px";ospin.style.height=imgHeight+0+"px";function init(delayTime){for(var i=0;i<aEle.length;i++){aEle[i].style.transform="rotateY("+i*(360/aEle.length)+"deg) translateZ("+radius+"px)";aEle[i].style.transition="transform 1s";aEle[i].style.transitionDelay=delayTime||(aEle.length-i)/5+"s"}}function applyTranform(obj){if(tY>0)tY=0;if(tY<0)tY=0;obj.style.transform="rotateX("+ -tY+"deg) rotateY("+tX+"deg)"}function playSpin(yes){ospin.style.animationPlayState=yes?"running":"paused"}var sX,sY,nX,nY,desX=0,desY=0,tX=0,tY=10;if(autoRotate){var animationName=rotateSpeed>0?"spin":"spinRevert";ospin.style.animation=`${animationName} ${Math.abs(rotateSpeed)}s infinite linear`}document.onpointerdown=function(e){clearInterval(odrag.timer);e=e||window.event;var sX=e.clientX,sY=e.clientY;this.onpointermove=function(e){e=e||window.event;var nX=e.clientX,nY=e.clientY;desX=nX-sX;desY=nY-sY;tX+=desX*0.1;tY+=desY*0.1;applyTranform(odrag);sX=nX;sY=nY};this.onpointerup=function(e){odrag.timer=setInterval(function(){desX*=0.95;desY*=0.95;tX+=desX*0.1;tY+=desY*0.1;applyTranform(odrag);playSpin(false);if(Math.abs(desX)<0.2&&Math.abs(desY)<0.1){clearInterval(odrag.timer);playSpin(true)}},17);this.onpointermove=this.onpointerup=null};return false};document.onmousewheel=function(e){e=e||window.event;var d=e.wheelDelta/50||-e.detail;radius+=d;init(1)};</script></body></html>
